@@ -1,0 +1,60 @@
+
+services:
+  postgres_database:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: code-analysis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  nestjs_backend:
+    image: backend-release-image
+    depends_on:
+      - postgres_database
+    environment:
+
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
+
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
+      - TYPEORM_SYNCHRONIZE=${TYPEORM_SYNCHRONIZE}
+      - TYPEORM_LOGGING=${TYPEORM_LOGGING}
+      - TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}
+      - TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}
+
+      - DB_DATABASE=code-analysis
+      - DB_HOST=postgres_database
+      - DB_PASSWORD=admin
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+    ports:
+      - "3000:3000"
+
+  # https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+  pgadmin:
+    image: dpage/pgadmin4:8
+    restart: always
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=1234
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres_database
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
