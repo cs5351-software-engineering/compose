@@ -4,3 +4,6 @@
 [submodule "ollama"]
 	path = ollama
 	url = https://github.com/cs5351-software-engineering/ollama.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/cs5351-software-engineering/frontend.git
