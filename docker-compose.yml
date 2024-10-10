@@ -1,5 +1,12 @@
 services:
 
+  frontend:
+    image: frontend-release-image
+    container_name: frontend
+    ports:
+      - "3000:3000"
+
+
   nestjs_database:
     image: postgres:15
     container_name: nestjs_database
@@ -9,8 +16,8 @@ services:
       POSTGRES_PASSWORD: admin
     volumes:
       - nestjs_database_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
 
 
   nestjs_backend:
@@ -36,8 +43,8 @@ services:
       - DB_PASSWORD=admin
       - DB_PORT=5432
       - DB_USERNAME=postgres
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     depends_on:
       - nestjs_database
 
@@ -72,8 +79,8 @@ services:
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_temp:/opt/sonarqube/temp
-    ports:
-      - "9000:9000"
+    # ports:
+    #   - "9000:9000"
   
 
   sonarqube_database:
@@ -92,8 +99,8 @@ services:
   ollama:
     image: ollama/ollama
     container_name: ollama
-    ports:
-      - 11434:11434
+    # ports:
+    #   - 11434:11434
 
     # Enable GPU
     # https://stackoverflow.com/questions/70761192/docker-compose-equivalent-of-docker-run-gpu-all-option
@@ -102,7 +109,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: 1 # alternatively, use `count: all` for all GPUs
+              count: all # alternatively, use `count: all` for all GPUs
               capabilities: [gpu]
 
   minio: 
