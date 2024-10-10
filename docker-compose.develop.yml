@@ -1,10 +1,12 @@
 services:
 
   frontend:
-    image: frontend-release-image
+    image: frontend-develop-image
     container_name: frontend
     ports:
       - "3000:3000"
+    tty: true
+    stop_signal: SIGKILL
 
 
   nestjs_database:
@@ -21,7 +23,7 @@ services:
 
 
   nestjs_backend:
-    image: backend-release-image
+    image: backend-develop-image
     container_name: nestjs_backend
     environment:
       - JWT_SECRET=${JWT_SECRET}
@@ -47,7 +49,8 @@ services:
     #   - "3000:3000"
     depends_on:
       - nestjs_database
-
+    tty: true
+    stop_signal: SIGKILL
 
   # https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
   pgadmin:
@@ -63,6 +66,7 @@ services:
       - '5050:80'
     depends_on:
       - nestjs_database
+    stop_signal: SIGKILL
 
 
   sonarqube:
